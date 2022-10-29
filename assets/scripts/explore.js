@@ -17,11 +17,8 @@ function init() {
   //if the voices from the browser changed, run the code to populate the options list
   synth.addEventListener('voiceschanged',populateVoiceList);
   talk.addEventListener('click',textToVoice);
-  synth.addEventListener('',changeImg);
-  
 
   var voices = [];
-
 
 
   //Ripped from the mozilla synth doc
@@ -29,18 +26,19 @@ function init() {
     voices = synth.getVoices();
 
     for (let i = 0; i < voices.length ; i++) {
+      //THIS IS HOW YOU CREATE A NEW ELEMENT ON A DOCUMENT
       const option = document.createElement('option');
       option.textContent = `${voices[i].name} (${voices[i].lang})`;
-      //console.log(option);
-  
-    
 
+
+      //This allows me to create and set an attribute that would appear like "id"
       option.setAttribute('data-lang', voices[i].lang);
       option.setAttribute('data-name', voices[i].name);
       voiceSelect.appendChild(option);
     }
   }
 
+  //mostly from Mozilla except for the utterThis event listeners to switch images
   function textToVoice(){
 
     var utterThis = new SpeechSynthesisUtterance(input.value);
@@ -49,11 +47,12 @@ function init() {
     for (let i = 0; i < voices.length ; i++) {
       if (voices[i].name === selectedOption) {
         utterThis.voice = voices[i];
+        break;
       }
     }
-    img1.src = "assets/images/smiling-open.png";
-    synth.speak(utterThis)
-    console.log('fired1');
+    synth.speak(utterThis);
+    //event listeners like start, end, and pause can be added to speak synthesis
+    utterThis.addEventListener('start',() => img1.src = "assets/images/smiling-open.png");
     utterThis.addEventListener('end',() => img1.src = "assets/images/smiling.png");
   }
   
